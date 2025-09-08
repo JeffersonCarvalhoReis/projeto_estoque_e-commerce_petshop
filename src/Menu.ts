@@ -1,11 +1,23 @@
 import { ProdutoController } from "./controller/ProdutoController";
+import { Acessorio } from "./model/Acessorio";
+import { Alimento } from "./model/Alimento";
+import { Medicamento } from "./model/Medicamento";
 import { colors } from "./util/Colors";
 import leia from "readline-sync";
 
 export function main() {
     const produtos: ProdutoController = new ProdutoController();
-    let nome: string;
-    let opcao: number;
+    let nome,
+        tipo,
+        descricao,
+        tamanho,
+        material,
+        sabor,
+        principioAtivo,
+        indicacao: string;
+    let opcao, preco, quantidade: number;
+    const porteAnimal: string[] = ["Pequeno", "Medio", "Grande"];
+    const tiposProdutos: string[] = ["Medicamento", "Alimento", "Acessorio"];
 
     while (true) {
         console.log(
@@ -47,9 +59,87 @@ export function main() {
             case 1:
                 console.log(
                     colors.fg.whitestrong,
-                    "\n\nAdicionar Produto\n\n",
+                    "\n\nAdicionar Novo Produto\n\n",
                     colors.reset
                 );
+                console.log("Escolha o tipo do produto: ");
+                tipo = leia.keyInSelect(tiposProdutos, "", { cancel: false }) + 1;
+
+                console.log("Digite o nome do produto: ");
+                nome = leia.question("");
+
+                console.log("Digite a descrição do produto: ");
+                descricao = leia.question("");
+
+                console.log("Digite o preço do produto: ");
+                preco = leia.questionFloat("");
+
+                console.log("Digite a quantidade do produto: ");
+                quantidade = leia.questionInt("");
+
+                switch (tipo) {
+                    case 1:
+                        console.log(
+                            "Digite o princípio ativo do medicamento: "
+                        );
+                        principioAtivo = leia.question("");
+
+                        console.log("Digite a indicação do medicamento: ");
+                        indicacao = leia.question("");
+
+                        produtos.cadastrar(
+                            new Medicamento(
+                                nome,
+                                preco,
+                                quantidade,
+                                descricao,
+                                principioAtivo,
+                                indicacao
+                            )
+                        );
+                        break;
+                    case 2:
+                        console.log("Digite o sabor do alimento: ");
+                        sabor = leia.question("");
+
+                        console.log("Escolha o porte do animal: ");
+                        const indicePorte = leia.keyInSelect(porteAnimal, "", {
+                            cancel: false,
+                        });
+
+                        produtos.cadastrar(
+                            new Alimento(
+                                nome,
+                                preco,
+                                quantidade,
+                                descricao,
+                                sabor,
+                                porteAnimal[indicePorte]!
+                            )
+                        );
+                        break;
+                    case 3:
+                        console.log(
+                            "Digite o tamanho do acessório (Pequeno, Médio, Grande): "
+                        );
+                        tamanho = leia.question("");
+
+                        console.log("Digite o material do acessório: ");
+                        material = leia.question("");
+
+                        produtos.cadastrar(
+                            new Acessorio(
+                                nome,
+                                preco,
+                                quantidade,
+                                descricao,
+                                tamanho,
+                                material
+                            )
+                        );
+
+                        break;
+                }
                 keyPress();
                 break;
             case 2:
@@ -58,6 +148,8 @@ export function main() {
                     "\n\nListar todos os Produtos\n\n",
                     colors.reset
                 );
+
+                produtos.listarTodos();
                 keyPress();
                 break;
             case 3:
@@ -77,6 +169,95 @@ export function main() {
                     "\n\nAtualizar Produto\n\n",
                     colors.reset
                 );
+                console.log("Digite o nome do produto: ");
+                nome = leia.question("");
+
+                const produto = produtos.buscarNoEstoque(nome);
+                if (produto) {
+                    console.log(`Digite o novo nome do produto (${produto.nome}): `);
+                    nome = leia.question("");
+
+                    console.log(`Digite a nova descrição do produto (${produto.descricao}):`);
+                    descricao = leia.question("");
+
+                    console.log(`Digite o novo preço do produto (R$${produto.preco.toFixed(2)}): `);
+                    preco = leia.questionFloat("");
+
+                    console.log(`Digite a nova quantidade do produto (${produto.quantidade}): `);
+                    quantidade = leia.questionInt("");
+
+                    tipo = produto.tipo;
+
+                    switch (tipo) {
+                    case 1:
+                        console.log(
+                            `Digite o novo princípio ativo do medicamento (${produto.principioAtivo}): `
+                        );
+                        principioAtivo = leia.question("");
+
+                        console.log("Digite a indicação do medicamento: ");
+                        indicacao = leia.question("");
+
+                        produtos.cadastrar(
+                            new Medicamento(
+                                nome,
+                                preco,
+                                quantidade,
+                                descricao,
+                                principioAtivo,
+                                indicacao
+                            )
+                        );
+                        break;
+                    case 2:
+                        console.log(`Digite o novo sabor do alimento (${produto.sabor}): `);
+                        sabor = leia.question("");
+
+                        console.log(`Escolha o novo porte do animal (porte atual: ${produto.porteAnimal}): `);
+                        const indicePorte = leia.keyInSelect(porteAnimal, "", {
+                            cancel: false,
+                        });
+
+                        produtos.cadastrar(
+                            new Alimento(
+                                nome,
+                                preco,
+                                quantidade,
+                                descricao,
+                                sabor,
+                                porteAnimal[indicePorte]!
+                            )
+                        );
+                        break;
+                    case 3:
+                        console.log(
+                            `Digite o tamanho do acessório (Pequeno, Médio, Grande) (tamanho atual: ${produto.tamanho}): `
+                        );
+                        tamanho = leia.question("");
+
+                        console.log("Digite o material do acessório: ");
+                        material = leia.question("");
+
+                        produtos.cadastrar(
+                            new Acessorio(
+                                nome,
+                                preco,
+                                quantidade,
+                                descricao,
+                                tamanho,
+                                material
+                            )
+                        );
+
+                        break;
+                }
+                } else {
+                    console.log(
+                        colors.fg.red,
+                        "\nProduto não encontrado no estoque!\n",
+                        colors.reset
+                    );
+                }
                 keyPress();
                 break;
             case 5:
@@ -85,6 +266,10 @@ export function main() {
                     "\n\nApagar Produto\n\n",
                     colors.reset
                 );
+                console.log("Digite o nome do produto: ");
+                nome = leia.question("");
+                produtos.deletar(nome);
+
                 keyPress();
                 break;
             default:

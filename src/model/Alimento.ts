@@ -5,7 +5,7 @@ export class Alimento extends Produto {
     private _porteAnimal: string;
 
     constructor(nome: string, preco: number, quantidade: number, descricao: string, sabor: string, porteAnimal: string) {
-        super(nome, preco, quantidade, descricao);
+        super(nome, preco, quantidade, descricao, 2);
         this._sabor = sabor;
         this._porteAnimal = porteAnimal;
     }

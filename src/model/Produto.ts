@@ -3,12 +3,14 @@ export abstract class Produto {
     private _preco: number;
     private _quantidade: number;
     private _descricao: string;
+    private _tipo: number;
 
-    constructor(nome: string, preco: number, quantidade: number, descricao: string) {
+    constructor(nome: string, preco: number, quantidade: number, descricao: string, tipo: number) {
         this._nome = nome;
         this._preco = preco;
         this._quantidade = quantidade;
         this._descricao = descricao;
+        this._tipo = tipo;
     }
 
     public get nome(): string {
@@ -34,6 +36,12 @@ export abstract class Produto {
     }
     public set descricao(descricao: string) {
         this._descricao = descricao;
+    }
+    public get tipo(): number {
+        return this._tipo;
+    }
+    public set tipo(tipo: number) {
+        this._tipo = tipo;
     }
 
     public visualizar(): void {

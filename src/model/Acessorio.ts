@@ -5,7 +5,7 @@ export class Acessorio extends Produto {
     private _material: string;
 
     constructor(nome: string, preco: number, quantidade: number, descricao: string, tamanho: string, material: string) {
-        super(nome, preco, quantidade, descricao);
+        super(nome, preco, quantidade, descricao, 3);
         this._tamanho = tamanho;
         this._material = material;
     }

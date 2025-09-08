@@ -5,7 +5,7 @@ export class Medicamento extends Produto {
     private _indicacao: string;
 
     constructor(nome: string, preco: number, quantidade: number, descricao: string, principioAtivo: string, indicacao: string) {
-        super(nome, preco, quantidade, descricao);
+        super(nome, preco, quantidade, descricao, 1);
         this._principioAtivo = principioAtivo;
         this._indicacao = indicacao;
     }
