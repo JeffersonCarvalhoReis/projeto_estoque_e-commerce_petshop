@@ -64,14 +64,14 @@ export class ProdutoController implements ProdutoRepository {
             colors.reset
         );
     }
-    atualizar(produto: Produto): void {
-        const buscaProduto = this.buscarNoEstoque(produto.nome);
+    atualizar(produto: Produto, novoProduto: Produto): void {
+        const buscaProduto = this.buscarNoEstoque(produto.nome);      
+
         if (buscaProduto) {
-            this.estoqueProdutos[this.estoqueProdutos.indexOf(buscaProduto)] =
-                produto;
+            this.estoqueProdutos[this.estoqueProdutos.indexOf(buscaProduto)] = novoProduto;
             console.log(
                 colors.fg.green,
-                `\nO produto ${produto.nome} foi atualizado com sucesso!`,
+                `\nO produto ${novoProduto.nome} foi atualizado com sucesso!`,
                 colors.reset
             );
         } else {
@@ -80,6 +80,7 @@ export class ProdutoController implements ProdutoRepository {
                 `\nO produto ${produto.nome} não foi encontrado!`,
                 colors.reset
             );
+            throw new Error("Produto não encontrado");
         }
     }
     deletar(nome: string): void {
@@ -100,6 +101,8 @@ export class ProdutoController implements ProdutoRepository {
                 `\nO produto ${nome} não foi encontrado!`,
                 colors.reset
             );
+
+            
         }
     }
     private normalizarTexto(texto: string): string {
