@@ -63,7 +63,8 @@ export function main() {
                     colors.reset
                 );
                 console.log("Escolha o tipo do produto: ");
-                tipo = leia.keyInSelect(tiposProdutos, "", { cancel: false }) + 1;
+                tipo =
+                    leia.keyInSelect(tiposProdutos, "", { cancel: false }) + 1;
 
                 console.log("Digite o nome do produto: ");
                 nome = leia.question("");
@@ -71,8 +72,19 @@ export function main() {
                 console.log("Digite a descrição do produto: ");
                 descricao = leia.question("");
 
-                console.log("Digite o preço do produto: ");
-                preco = leia.questionFloat("");
+                let valido = false;
+                do {
+                    try {
+                        console.log("Digite o preço do produto: ");
+                        preco = leia.questionFloat("");
+                        if (preco < 0) {
+                            throw new Error("O preço não pode ser negativo");
+                        }
+                        valido = true;
+                    } catch (error: any) {
+                        console.log(error.message);
+                    }
+                } while (!valido);
 
                 console.log("Digite a quantidade do produto: ");
                 quantidade = leia.questionInt("");
@@ -90,7 +102,7 @@ export function main() {
                         produtos.cadastrar(
                             new Medicamento(
                                 nome,
-                                preco,
+                                preco!,
                                 quantidade,
                                 descricao,
                                 principioAtivo,
@@ -110,7 +122,7 @@ export function main() {
                         produtos.cadastrar(
                             new Alimento(
                                 nome,
-                                preco,
+                                preco!,
                                 quantidade,
                                 descricao,
                                 sabor,
@@ -130,7 +142,7 @@ export function main() {
                         produtos.cadastrar(
                             new Acessorio(
                                 nome,
-                                preco,
+                                preco!,
                                 quantidade,
                                 descricao,
                                 tamanho,
@@ -174,83 +186,113 @@ export function main() {
 
                 const produto = produtos.buscarNoEstoque(nome);
                 if (produto) {
-                    console.log(`Digite o novo nome do produto (${produto.nome}): `);
+                    console.log(
+                        `Digite o novo nome do produto (${produto.nome}): `
+                    );
                     nome = leia.question("");
 
-                    console.log(`Digite a nova descrição do produto (${produto.descricao}):`);
+                    console.log(
+                        `Digite a nova descrição do produto (${produto.descricao}):`
+                    );
                     descricao = leia.question("");
 
-                    console.log(`Digite o novo preço do produto (R$${produto.preco.toFixed(2)}): `);
-                    preco = leia.questionFloat("");
+                    let valido = false;
+                    do {
+                        try {
+                            console.log(
+                                `Digite o novo preço do produto (R$${produto.preco.toFixed(
+                                    2
+                                )}): `
+                            );
+                            preco = leia.questionFloat("");
+                            if (preco < 0) {
+                                throw new Error(
+                                    "O preço não pode ser negativo"
+                                );
+                            }
+                            valido = true;
+                        } catch (error: any) {
+                            console.log(error.message);
+                        }
+                    } while (!valido);
 
-                    console.log(`Digite a nova quantidade do produto (${produto.quantidade}): `);
+                    console.log(
+                        `Digite a nova quantidade do produto (${produto.quantidade}): `
+                    );
                     quantidade = leia.questionInt("");
 
                     tipo = produto.tipo;
 
                     switch (tipo) {
-                    case 1:
-                        console.log(
-                            `Digite o novo princípio ativo do medicamento (${produto.principioAtivo}): `
-                        );
-                        principioAtivo = leia.question("");
+                        case 1:
+                            console.log(
+                                `Digite o novo princípio ativo do medicamento: `
+                            );
+                            principioAtivo = leia.question("");
 
-                        console.log("Digite a indicação do medicamento: ");
-                        indicacao = leia.question("");
+                            console.log("Digite a indicação do medicamento: ");
+                            indicacao = leia.question("");
 
-                        produtos.cadastrar(
-                            new Medicamento(
-                                nome,
-                                preco,
-                                quantidade,
-                                descricao,
-                                principioAtivo,
-                                indicacao
-                            )
-                        );
-                        break;
-                    case 2:
-                        console.log(`Digite o novo sabor do alimento (${produto.sabor}): `);
-                        sabor = leia.question("");
+                            produtos.atualizar(
+                                produto,
+                                new Medicamento(
+                                    nome,
+                                    preco!,
+                                    quantidade,
+                                    descricao,
+                                    principioAtivo,
+                                    indicacao
+                                )
+                            );
+                            break;
+                        case 2:
+                            console.log(`Digite o novo sabor do alimento: `);
+                            sabor = leia.question("");
 
-                        console.log(`Escolha o novo porte do animal (porte atual: ${produto.porteAnimal}): `);
-                        const indicePorte = leia.keyInSelect(porteAnimal, "", {
-                            cancel: false,
-                        });
+                            console.log(`Escolha o novo porte do animal: `);
+                            const indicePorte = leia.keyInSelect(
+                                porteAnimal,
+                                "",
+                                {
+                                    cancel: false,
+                                }
+                            );
 
-                        produtos.cadastrar(
-                            new Alimento(
-                                nome,
-                                preco,
-                                quantidade,
-                                descricao,
-                                sabor,
-                                porteAnimal[indicePorte]!
-                            )
-                        );
-                        break;
-                    case 3:
-                        console.log(
-                            `Digite o tamanho do acessório (Pequeno, Médio, Grande) (tamanho atual: ${produto.tamanho}): `
-                        );
-                        tamanho = leia.question("");
+                            produtos.atualizar(
+                                produto,
+                                new Alimento(
+                                    nome,
+                                    preco!,
+                                    quantidade,
+                                    descricao,
+                                    sabor,
+                                    porteAnimal[indicePorte]!
+                                )
+                            );
+                            break;
+                        case 3:
+                            console.log(
+                                `Digite o tamanho do acessório (Pequeno, Médio, Grande): `
+                            );
+                            tamanho = leia.question("");
 
-                        console.log("Digite o material do acessório: ");
-                        material = leia.question("");
+                            console.log("Digite o material do acessório: ");
+                            material = leia.question("");
 
-                        produtos.cadastrar(
-                            new Acessorio(
-                                nome,
-                                preco,
-                                quantidade,
-                                descricao,
-                                tamanho,
-                                material
-                            )
-                        );
+                            produtos.atualizar(
+                                produto,
+                                new Acessorio(
+                                    nome,
+                                    preco!,
+                                    quantidade,
+                                    descricao,
+                                    tamanho,
+                                    material
+                                )
+                            );
 
-                        break;
-                }
+                            break;
+                    }
                 } else {
                     console.log(
                         colors.fg.red,
