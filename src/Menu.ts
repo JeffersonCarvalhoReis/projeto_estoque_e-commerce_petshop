@@ -1,7 +1,10 @@
+import { ProdutoController } from "./controller/ProdutoController";
 import { colors } from "./util/Colors";
 import leia from "readline-sync";
 
 export function main() {
+    const produtos: ProdutoController = new ProdutoController();
+    let nome: string;
     let opcao: number;
 
     while (true) {
@@ -63,6 +66,9 @@ export function main() {
                     "\n\nBuscar Produto por Nome\n\n",
                     colors.reset
                 );
+                console.log("Digite o nome do produto: ");
+                nome = leia.question("");
+                produtos.procurarPorNome(nome);
                 keyPress();
                 break;
             case 4:
