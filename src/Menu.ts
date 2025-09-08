@@ -185,121 +185,127 @@ export function main() {
                 nome = leia.question("");
 
                 const produto = produtos.buscarNoEstoque(nome);
-                if (produto) {
-                    console.log(
-                        `Digite o novo nome do produto (${produto.nome}): `
-                    );
-                    nome = leia.question("");
 
-                    console.log(
-                        `Digite a nova descrição do produto (${produto.descricao}):`
-                    );
-                    descricao = leia.question("");
+                try {
+                    if (produto) {
+                        console.log(
+                            `Digite o novo nome do produto (${produto.nome}): `
+                        );
+                        nome = leia.question("");
 
-                    let valido = false;
-                    do {
-                        try {
-                            console.log(
-                                `Digite o novo preço do produto (R$${produto.preco.toFixed(
-                                    2
-                                )}): `
-                            );
-                            preco = leia.questionFloat("");
-                            if (preco < 0) {
-                                throw new Error(
-                                    "O preço não pode ser negativo"
+                        console.log(
+                            `Digite a nova descrição do produto (${produto.descricao}):`
+                        );
+                        descricao = leia.question("");
+
+                        let valido = false;
+                        do {
+                            try {
+                                console.log(
+                                    `Digite o novo preço do produto (R$${produto.preco.toFixed(
+                                        2
+                                    )}): `
                                 );
-                            }
-                            valido = true;
-                        } catch (error: any) {
-                            console.log(error.message);
-                        }
-                    } while (!valido);
-
-                    console.log(
-                        `Digite a nova quantidade do produto (${produto.quantidade}): `
-                    );
-                    quantidade = leia.questionInt("");
-
-                    tipo = produto.tipo;
-
-                    switch (tipo) {
-                        case 1:
-                            console.log(
-                                `Digite o novo princípio ativo do medicamento: `
-                            );
-                            principioAtivo = leia.question("");
-
-                            console.log("Digite a indicação do medicamento: ");
-                            indicacao = leia.question("");
-
-                            produtos.atualizar(
-                                produto,
-                                new Medicamento(
-                                    nome,
-                                    preco!,
-                                    quantidade,
-                                    descricao,
-                                    principioAtivo,
-                                    indicacao
-                                )
-                            );
-                            break;
-                        case 2:
-                            console.log(`Digite o novo sabor do alimento: `);
-                            sabor = leia.question("");
-
-                            console.log(`Escolha o novo porte do animal: `);
-                            const indicePorte = leia.keyInSelect(
-                                porteAnimal,
-                                "",
-                                {
-                                    cancel: false,
+                                preco = leia.questionFloat("");
+                                if (preco < 0) {
+                                    throw new Error(
+                                        "O preço não pode ser negativo"
+                                    );
                                 }
-                            );
+                                valido = true;
+                            } catch (error: any) {
+                                console.log(error.message);
+                            }
+                        } while (!valido);
 
-                            produtos.atualizar(
-                                produto,
-                                new Alimento(
-                                    nome,
-                                    preco!,
-                                    quantidade,
-                                    descricao,
-                                    sabor,
-                                    porteAnimal[indicePorte]!
-                                )
-                            );
-                            break;
-                        case 3:
-                            console.log(
-                                `Digite o tamanho do acessório (Pequeno, Médio, Grande): `
-                            );
-                            tamanho = leia.question("");
+                        console.log(
+                            `Digite a nova quantidade do produto (${produto.quantidade}): `
+                        );
+                        quantidade = leia.questionInt("");
 
-                            console.log("Digite o material do acessório: ");
-                            material = leia.question("");
+                        tipo = produto.tipo;
 
-                            produtos.atualizar(
-                                produto,
-                                new Acessorio(
-                                    nome,
-                                    preco!,
-                                    quantidade,
-                                    descricao,
-                                    tamanho,
-                                    material
-                                )
-                            );
+                        switch (tipo) {
+                            case 1:
+                                console.log(
+                                    `Digite o novo princípio ativo do medicamento: `
+                                );
+                                principioAtivo = leia.question("");
 
-                            break;
+                                console.log(
+                                    "Digite a indicação do medicamento: "
+                                );
+                                indicacao = leia.question("");
+
+                                produtos.atualizar(
+                                    produto,
+                                    new Medicamento(
+                                        nome,
+                                        preco!,
+                                        quantidade,
+                                        descricao,
+                                        principioAtivo,
+                                        indicacao
+                                    )
+                                );
+                                break;
+                            case 2:
+                                console.log(
+                                    `Digite o novo sabor do alimento: `
+                                );
+                                sabor = leia.question("");
+
+                                console.log(`Escolha o novo porte do animal: `);
+                                const indicePorte = leia.keyInSelect(
+                                    porteAnimal,
+                                    "",
+                                    {
+                                        cancel: false,
+                                    }
+                                );
+
+                                produtos.atualizar(
+                                    produto,
+                                    new Alimento(
+                                        nome,
+                                        preco!,
+                                        quantidade,
+                                        descricao,
+                                        sabor,
+                                        porteAnimal[indicePorte]!
+                                    )
+                                );
+                                break;
+                            case 3:
+                                console.log(
+                                    `Digite o tamanho do acessório (Pequeno, Médio, Grande): `
+                                );
+                                tamanho = leia.question("");
+
+                                console.log("Digite o material do acessório: ");
+                                material = leia.question("");
+
+                                produtos.atualizar(
+                                    produto,
+                                    new Acessorio(
+                                        nome,
+                                        preco!,
+                                        quantidade,
+                                        descricao,
+                                        tamanho,
+                                        material
+                                    )
+                                );
+
+                                break;
+                        }
+                    } else {
+                        throw new Error("Produto não encontrado no estoque!");
                     }
-                } else {
-                    console.log(
-                        colors.fg.red,
-                        "\nProduto não encontrado no estoque!\n",
-                        colors.reset
-                    );
+                } catch (error: any) {
+                    console.error(error.message);
                 }
+
                 keyPress();
                 break;
             case 5:

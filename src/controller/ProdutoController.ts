@@ -80,7 +80,6 @@ export class ProdutoController implements ProdutoRepository {
                 `\nO produto ${produto.nome} não foi encontrado!`,
                 colors.reset
             );
-            throw new Error("Produto não encontrado");
         }
     }
     deletar(nome: string): void {
@@ -101,8 +100,6 @@ export class ProdutoController implements ProdutoRepository {
                 `\nO produto ${nome} não foi encontrado!`,
                 colors.reset
             );
-
-            
         }
     }
     private normalizarTexto(texto: string): string {
